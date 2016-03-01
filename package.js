@@ -14,7 +14,15 @@ Package.onUse(function(api) {
   api.versionsFrom('1.2.1');
   api.use('ecmascript');
   api.use('t3db0t:accounts-multiple');
-  api.addFiles('accounts-invite.js');
+  api.addFiles('lib/accounts-invite.js');
+  api.addFiles('lib/collections.js');
+  api.addFiles('server/accounts-invite-server.js', 'server');
+  api.addFiles('server/accounts-invite-methods.js', 'server');
+  api.addFiles('server/publications.js', 'server');
+  api.addFiles('client/templates.js', 'client');
+  api.addFiles('client/templates.css', 'client');
+  api.addFiles('client/templates.html', 'client');
+  api.addFiles('client/accounts-invite-templates.html', 'client');
 });
 
 Package.onTest(function(api) {

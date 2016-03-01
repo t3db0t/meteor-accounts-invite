@@ -1,0 +1,72 @@
+<template name="home">
+{{>loginButtons}}
+<h1>Home</h1>
+<p>Notice that login buttons are provided at this public route.  Users who have created an account using an invitation token will be able to login here like any normal app. However, users who have not done this will <strong>not</strong> be able to login OR create accounts.</p>
+</template>
+
+
+
+<template name="acceptInvite">
+	<h1>Thanks for your interest in this app!</h1>
+    {{> inviteLogin token=token}}
+</template>
+
+
+
+<template name="invites">
+	<h2>Create a Beta Invite</h2>
+	<form class="new-task">
+        <input id="inviteEmail" type="text" name="email" placeholder="Email address" />
+        <input type="submit" value="Invite">
+    </form>
+
+    <h2>Invites</h2>
+    <table class="invites-table">
+        <thead>
+            <tr>
+                <th>Created At</th>
+                <th>Email</th>
+                <th>Token</th>
+                <th>Status</th>
+                <th>Revoke</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+
+    	{{#each invites}}
+    	<tr>
+            <td>{{datetime}}</td>
+            <td>{{email}}</td>
+            <td>{{token}}</td>
+            <td>{{status}}</td>
+            <td><a class="invite-revoke" data-id="{{_id}}" href="#">Revoke</a></td>
+            <td><a class="invite-delete" data-id="{{_id}}" href="#">Delete</a></td>
+        </tr>
+    	{{/each}}
+    </table>
+
+    <h2>Users</h2>
+    <table class="invites-users-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Created At</th>
+                <th>Accounts-Invite Token</th>
+                <th>Services</th>
+                <th></th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+
+        {{#each users}}
+        <tr>
+            <td>{{_id}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><a class="user-delete" data-id="{{_id}}" href="#">Delete</a></td>
+        </tr>
+        {{/each}}
+    </table>
+</template>

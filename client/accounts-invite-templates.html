@@ -1,0 +1,27 @@
+<!-- Templates for use with Accounts-Invite -->
+
+<template name="inviteLogin">
+	{{> Template.dynamic template=inviteStatus}}
+</template>
+
+<template name="invite-requested">
+	You've requested an invite. We'll let you know when your invite is ready!
+</template>
+
+<template name="invite-invited">
+	You're invited! Log in with any of these services:
+	{{>loginButtons}}
+</template>
+
+<template name="invite-visited">
+	You're invited! Log in with any of these services:
+	{{>loginButtons}}
+</template>
+
+<template name="invite-claimed">
+	You've claimed your invitation.  Return home to login.
+</template>
+
+<template name="invite-invalid">
+	Sorry, this is an invalid invitation.
+</template>
