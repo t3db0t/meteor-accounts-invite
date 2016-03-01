@@ -21,8 +21,8 @@ Package.onUse(function(api) {
   api.addFiles('server/publications.js', 'server');
   api.addFiles('client/templates.js', 'client');
   api.addFiles('client/templates.css', 'client');
-  api.addFiles('client/templates.html', 'client');
-  api.addFiles('client/accounts-invite-templates.html', 'client');
+  api.addAssets('client/templates.html', 'client');
+  api.addAssets('client/accounts-invite-templates.html', 'client');
 });
 
 Package.onTest(function(api) {
