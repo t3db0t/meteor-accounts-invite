@@ -12,17 +12,43 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.versionsFrom('1.2.1');
-  api.use('ecmascript');
+  // api.use('ecmascript');
+  
+  
+  api.use(['templating', 'blaze-html-templates'], 'client');
+  
+  api.use(['accounts-base'], ['client', 'server']);
   api.use('t3db0t:accounts-multiple');
-  api.addFiles('lib/accounts-invite.js');
-  api.addFiles('lib/collections.js');
-  api.addFiles('server/accounts-invite-server.js', 'server');
-  api.addFiles('server/accounts-invite-methods.js', 'server');
-  api.addFiles('server/publications.js', 'server');
-  api.addFiles('client/templates.js', 'client');
-  api.addFiles('client/templates.css', 'client');
-  api.addAssets('client/templates.html', 'client');
-  api.addAssets('client/accounts-invite-templates.html', 'client');
+
+  // Allow us to call Accounts.oauth.serviceNames, if there are any OAuth
+  // services.
+  // api.use('accounts-oauth', {weak: true});
+  // Allow us to directly test if accounts-password (which doesn't use
+  // Accounts.oauth.registerService) exists.
+  // api.use('accounts-password', {weak: true});
+
+  api.addFiles([
+    'client/accounts-invite-templates.html',
+    'client/accounts-invite-templates.js',
+    'client/accounts-invite-templates.css',
+  ], 'client');
+
+  api.addFiles([
+    'lib/accounts-invite.js',
+    'lib/collections.js'
+  ]);
+
+  api.addFiles([
+    'server/accounts-invite-server.js',
+    'server/accounts-invite-methods.js',
+    'server/publications.js'
+  ], 'server');
+
+  // api.addFiles([
+  //   'client/accounts-invite-templates.js'
+  // ], 'client');
+
+  api.export('AccountsInvite');
 });
 
 Package.onTest(function(api) {
