@@ -1,46 +1,30 @@
-Template.acceptInvite.onCreated(function(){
-  // template-level subscription to invite state
-  var self = this;
-  self.autorun(function() {
-    var token = Router.current().params._token;
-    self.subscribe('inviteTokens', token);
-  });
-});
-
-Template.acceptInvite.helpers({
-  "token":function(){
-    return Router.current().params._token;
-  }
-});
-
-
 Template.inviteLogin.helpers({
   "inviteStatus":function(){
     // this.token must be set in data context in the implementing template,
     // i.e. {{> inviteLogin token=token}}
     var token = this.token;
     var invite = BetaInvites.findOne({"token":token});
-    if(!invite) return "invite-invalid";
+    if(!invite) return "inviteInvalid";
     if(invite.status == "invited"){
       // do Accounts-Invite login - but only do it once on token validation
       Meteor.loginWithAccountsInvite(invite);
-      return "invite-invited";
+      return "inviteInvited";
     } else if(invite.status == "visited"){
-      return "invite-visited";
+      return "inviteVisited";
     } else if(invite.status == "claimed"){
-      return "invite-claimed";
+      return "inviteClaimed";
     }
   }
 });
 
-Template.invites.onCreated(function() {
+Template.inviteAdmin.onCreated(function() {
   var self = this;
   self.autorun(function() {
     self.subscribe('betaInvites');  
   });
 });
 
-Template.invites.helpers({
+Template.inviteAdmin.helpers({
   "datetime":function(){
     var d = new Date(this.createdAt);
     return d.toLocaleString();
@@ -53,7 +37,7 @@ Template.invites.helpers({
   }
 });
 
-Template.invites.events = {
+Template.inviteAdmin.events = {
   'submit form': function (event, template) {
     event.preventDefault();
     var inviteEmail = template.find('#inviteEmail').value;

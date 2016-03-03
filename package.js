@@ -13,6 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.2.1');
   // api.use('ecmascript');
+  api.export('AccountsInvite');
   
   
   api.use(['templating', 'blaze-html-templates'], 'client');
@@ -48,7 +49,7 @@ Package.onUse(function(api) {
   //   'client/accounts-invite-templates.js'
   // ], 'client');
 
-  api.export('AccountsInvite');
+  
 });
 
 Package.onTest(function(api) {
