@@ -64,8 +64,8 @@
     <table class="invites-users-table">
         <thead>
             <tr>
+            	<th>Created At</th>
                 <th>ID</th>
-                <th>Created At</th>
                 <th>Accounts-Invite Token</th>
                 <th>Services</th>
                 <th></th>
@@ -75,10 +75,10 @@
 
         {{#each users}}
         <tr>
+        	<td>{{datetime}}</td>
             <td>{{_id}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{inviteToken}}</td>
+            <td>{{services}}</td>
             <td></td>
             <td><a class="user-delete" data-id="{{_id}}" href="#">Delete</a></td>
         </tr>

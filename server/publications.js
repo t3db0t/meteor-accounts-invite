@@ -1,3 +1,7 @@
+Meteor.publish("allUsers", function(){
+	return Meteor.users.find();
+});
+
 Meteor.publish("betaInvites", function () {
   return BetaInvites.find();
 });

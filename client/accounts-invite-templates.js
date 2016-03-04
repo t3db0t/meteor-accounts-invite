@@ -7,7 +7,7 @@ Template.inviteLogin.helpers({
     if(!invite) return "inviteInvalid";
     if(invite.status == "invited"){
       // do Accounts-Invite login - but only do it once on token validation
-      Meteor.loginWithAccountsInvite(invite);
+      Meteor.loginWithInvite(invite);
       return "inviteInvited";
     } else if(invite.status == "visited"){
       return "inviteVisited";
@@ -20,7 +20,8 @@ Template.inviteLogin.helpers({
 Template.inviteAdmin.onCreated(function() {
   var self = this;
   self.autorun(function() {
-    self.subscribe('betaInvites');  
+    self.subscribe('betaInvites');
+    self.subscribe('allUsers');
   });
 });
 
@@ -34,6 +35,21 @@ Template.inviteAdmin.helpers({
   },
   "users":function(){
     return Meteor.users.find();
+  },
+  "inviteToken":function(){
+    var t = "";
+    if(this.services.accountsInvite){
+      t = this.services.accountsInvite.token;
+    }
+    return t;
+  },
+  "services":function(){
+    // String of services registered to this user
+    return _.chain(this.services)
+      .map(function(v,k,l){ return k })
+      .filter(function(k){ return k != "resume"})
+      .value()
+      .join(" | ");
   }
 });
 
@@ -48,5 +64,9 @@ Template.inviteAdmin.events = {
   },
   'click a.invite-delete': function(e,t) {
     Meteor.call("invitesDelete", $(e.currentTarget).attr('data-id'));
+  },
+  'click a.user-delete':function(e,t){
+    Meteor.users.remove($(e.currentTarget).attr('data-id'));
+    // Meteor.call("deleteUser", )
   }
 };

@@ -5,7 +5,7 @@ AccountsMultiple.register({
   onSwitchFailure: onSwitchFailureCallback
 });
 
-// Works like validateLoginAttempt but only called 
+// Works like validateLoginAttempt but only called from AccountsMultiple
 function noAttemptingUserCallback(attempt){
   console.log("noAttemptingUserCallback");
   // console.log(attempt);
@@ -13,7 +13,8 @@ function noAttemptingUserCallback(attempt){
     // delete the user record that was created in the attempt
     console.log("No accountsInvite; canceling login");
     Meteor.users.remove({"_id":attempt.user._id});
-    return false;
+    // return false;
+    throw new Meteor.Error("not-invited-public", "Sorry, Beta invitations only for now!")
   } else return true;
 }
 
@@ -35,8 +36,8 @@ function validateSwitchCallback(attemptingUser, attempt) {
 function onSwitchFailureCallback(attemptingUser, attempt){
   console.log("onSwitchFailureCallback");
   if(attemptingUser.services.accountsInvite && attempt.error){
-    // The attempt is using Accounts-Invite, let them in. The error is produced by brettle:accounts-add-service
-    // update user's invitation status to "claimed"
+    // The attempt is using Accounts-Invite, let them in. The error is produced by brettle:accounts-add-service.
+    // Update user's invitation status to "claimed"
     console.log("--> claiming invite");
     BetaInvites.update({"token":attemptingUser.services.accountsInvite.token}, {$set:{"status":"claimed"}});
   } else {
@@ -45,6 +46,7 @@ function onSwitchFailureCallback(attemptingUser, attempt){
 }
 
 Accounts.onLoginFailure(function(attempt){
+  console.log("------------------------");
   console.log("Accounts.onLoginFailure");
   console.log(attempt);
   console.log("------------------------");
@@ -94,6 +96,7 @@ AccountsInvite.sendInviteEmail = function(token, inviteEmail){
 // Register a client login handler that either logs in an existing user with the specified invitation token, or creates a new user record with that token.
 
 Accounts.registerLoginHandler("accounts-invite", function(options) {
+  console.log("accounts-invite loginHandler");
   if (!options || !options.inviteToken || Meteor.userId()) {
     return new Meteor.Error("invalid-invitation-login", "No options, no token, or already logged in");
   }
