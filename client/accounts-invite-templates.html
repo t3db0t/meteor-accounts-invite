@@ -19,7 +19,7 @@
 </template>
 
 <template name="inviteClaimed">
-	You've claimed your invitation.  Return home to login.
+	You've claimed your invitation.  Return <a href="/">home</a>.
 </template>
 
 <template name="inviteInvalid">
@@ -29,8 +29,14 @@
 <!-- Invites Admin -->
 
 <template name="inviteAdmin">
+	<h2>Request a Beta Invite</h2>
+	<form class="inviteRequest">
+        <input id="requestInviteEmail" type="text" name="email" placeholder="Email address" />
+        <input type="submit" value="Request">
+    </form>
+
 	<h2>Create a Beta Invite</h2>
-	<form class="new-task">
+	<form class="inviteCreate">
         <input id="inviteEmail" type="text" name="email" placeholder="Email address" />
         <input type="submit" value="Invite">
     </form>
@@ -43,6 +49,7 @@
                 <th>Email</th>
                 <th>Token</th>
                 <th>Status</th>
+                <th>Reset</th>
                 <th>Revoke</th>
                 <th>Delete</th>
             </tr>
@@ -52,8 +59,9 @@
     	<tr>
             <td>{{datetime}}</td>
             <td>{{email}}</td>
-            <td>{{token}}</td>
+            <td><a href="/acceptInvite/{{token}}">{{token}}</a></td>
             <td>{{status}}</td>
+            <td><a class="invite-reset" data-id="{{_id}}" href="#">Reset</a></td>
             <td><a class="invite-revoke" data-id="{{_id}}" href="#">Revoke</a></td>
             <td><a class="invite-delete" data-id="{{_id}}" href="#">Delete</a></td>
         </tr>
@@ -68,7 +76,6 @@
                 <th>ID</th>
                 <th>Accounts-Invite Token</th>
                 <th>Services</th>
-                <th></th>
                 <th>Delete</th>
             </tr>
         </thead>
@@ -79,7 +86,6 @@
             <td>{{_id}}</td>
             <td>{{inviteToken}}</td>
             <td>{{services}}</td>
-            <td></td>
             <td><a class="user-delete" data-id="{{_id}}" href="#">Delete</a></td>
         </tr>
         {{/each}}

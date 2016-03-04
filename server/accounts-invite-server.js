@@ -61,6 +61,9 @@ AccountsInvite.createInviteRequest = function(requestEmail){
     "createdAt": new Date(),
     "userId": ""   // associated with actual user account when registered
   });
+
+  // Send invite request confirmation
+  
 }
 
 AccountsInvite.createInvitation = function(inviteEmail){

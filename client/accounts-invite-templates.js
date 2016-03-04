@@ -54,10 +54,18 @@ Template.inviteAdmin.helpers({
 });
 
 Template.inviteAdmin.events = {
-  'submit form': function (event, template) {
+  'submit form.inviteRequest': function (event, template) {
+    event.preventDefault();
+    var inviteEmail = template.find('#requestInviteEmail').value;
+    Meteor.call('invitesRequest', inviteEmail);
+  },
+  'submit form.inviteCreate': function (event, template) {
     event.preventDefault();
     var inviteEmail = template.find('#inviteEmail').value;
     Meteor.call('invitesCreate', inviteEmail);
+  },
+  'click a.invite-reset': function(e,t) {
+    Meteor.call("invitesReset", $(e.currentTarget).attr('data-id'));
   },
   'click a.invite-revoke': function(e,t) {
     Meteor.call("invitesRevoke", $(e.currentTarget).attr('data-id'));
@@ -66,7 +74,6 @@ Template.inviteAdmin.events = {
     Meteor.call("invitesDelete", $(e.currentTarget).attr('data-id'));
   },
   'click a.user-delete':function(e,t){
-    Meteor.users.remove($(e.currentTarget).attr('data-id'));
-    // Meteor.call("deleteUser", )
+    Meteor.call("deleteUser", $(e.currentTarget).attr('data-id'));
   }
 };
