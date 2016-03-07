@@ -38,8 +38,9 @@ function onSwitchFailureCallback(attemptingUser, attempt){
   if(attemptingUser.services.accountsInvite && attempt.error){
     // The attempt is using Accounts-Invite, let them in. The error is produced by brettle:accounts-add-service.
     // Update user's invitation status to "claimed"
-    console.log("--> claiming invite");
-    BetaInvites.update({"token":attemptingUser.services.accountsInvite.token}, {$set:{"status":"claimed"}});
+    // console.log("--> claiming invite");
+    // BetaInvites.update({"token":attemptingUser.services.accountsInvite.token}, {$set:{"status":"claimed"}});
+    AccountsInvite.onCreatedAccount(attemptingUser.services.accountsInvite.token);
   } else {
     console.log("accounts-add-service failed");
   }
@@ -63,7 +64,7 @@ AccountsInvite.createInviteRequest = function(requestEmail){
   });
 
   // Send invite request confirmation
-  
+
 }
 
 AccountsInvite.createInvitation = function(inviteEmail){
