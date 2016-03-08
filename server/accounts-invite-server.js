@@ -2,13 +2,19 @@
 // 
 
 AccountsInvite.register = function(cbs){
+  check(cbs, Object);
+
   if(cbs.validateToken){
     AccountsInvite.validateToken = cbs.validateToken;
   }
   if(cbs.onCreatedAccount){
     AccountsInvite.onCreatedAccount = cbs.onCreatedAccount;
   }
-  
+  if(cbs.validationOptions){
+    AccountsInvite.validationOptions = cbs.validationOptions;
+  } else {
+    AccountsInvite.validationOptions = {};
+  }
 }
 
 AccountsMultiple.register({
@@ -37,7 +43,7 @@ function validateSwitchCallback(attemptingUser, attempt) {
   console.log("validateSwitchCallback");
   console.log(attemptingUser);
   if (attemptingUser.services.accountsInvite.token) {
-    return AccountsInvite.validateToken(attemptingUser.services.accountsInvite.token);
+    return AccountsInvite.validateToken(attemptingUser.services.accountsInvite.token, AccountsInvite.validationOptions);
   } else {
     throw new Meteor.Error("not-invited", "This login attempt somehow wasn't using accounts-invite");
   }
@@ -51,8 +57,6 @@ function onSwitchFailureCallback(attemptingUser, attempt){
   if(attemptingUser.services.accountsInvite && attempt.error){
     // The attempt is using Accounts-Invite, let them in. The error is produced by brettle:accounts-add-service.
     // Update user's invitation status to "claimed"
-    // console.log("--> claiming invite");
-    // BetaInvites.update({"token":attemptingUser.services.accountsInvite.token}, {$set:{"status":"claimed"}});
     AccountsInvite.onCreatedAccount(attemptingUser.services.accountsInvite.token);
   } else {
     console.log("accounts-add-service failed");
