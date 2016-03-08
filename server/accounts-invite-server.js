@@ -1,3 +1,16 @@
+// onCreatedAccount, onInvalidToken, loginCallback?
+// 
+
+AccountsInvite.register = function(cbs){
+  if(cbs.validateToken){
+    AccountsInvite.validateToken = cbs.validateToken;
+  }
+  if(cbs.onCreatedAccount){
+    AccountsInvite.onCreatedAccount = cbs.onCreatedAccount;
+  }
+  
+}
+
 AccountsMultiple.register({
   onNoAttemptingUser: noAttemptingUserCallback,
   validateSwitch: validateSwitchCallback,
@@ -5,9 +18,9 @@ AccountsMultiple.register({
   onSwitchFailure: onSwitchFailureCallback
 });
 
-// Works like validateLoginAttempt but only called from AccountsMultiple
+// Works like validateLoginAttempt but only called from t3db0t:accounts-multiple
 function noAttemptingUserCallback(attempt){
-  console.log("noAttemptingUserCallback");
+  // console.log("noAttemptingUserCallback");
   // console.log(attempt);
   if(! attempt.user.services.accountsInvite){
     // delete the user record that was created in the attempt
@@ -24,7 +37,7 @@ function validateSwitchCallback(attemptingUser, attempt) {
   console.log("validateSwitchCallback");
   console.log(attemptingUser);
   if (attemptingUser.services.accountsInvite.token) {
-    return true;
+    return AccountsInvite.validateToken(attemptingUser.services.accountsInvite.token);
   } else {
     throw new Meteor.Error("not-invited", "This login attempt somehow wasn't using accounts-invite");
   }
@@ -52,50 +65,6 @@ Accounts.onLoginFailure(function(attempt){
   console.log(attempt);
   console.log("------------------------");
 });
-
-AccountsInvite.createInviteRequest = function(requestEmail){
-  // For beta signup requests
-  var m = BetaInvites.insert({
-    "token": "",
-    "status": "requested", // requested, invited, visited (reached accept page but didn't claim), claimed
-    "email": requestEmail,
-    "createdAt": new Date(),
-    "userId": ""   // associated with actual user account when registered
-  });
-
-  // Send invite request confirmation
-
-}
-
-AccountsInvite.createInvitation = function(inviteEmail){
-  // generate invite hash
-  // insert beta invite record
-  var token = Random.id(8);
-  var m = BetaInvites.insert({
-    "token": token,
-    "status": "invited", // requested, invited, visited (reached accept page but didn't claim), claimed
-    "email": inviteEmail,
-    "createdAt": new Date(),
-    "userId": ""   // associated with actual user account when registered
-  });
-
-  // send Invite email
-  AccountsInvite.sendInviteEmail(token, inviteEmail);
-}
-
-AccountsInvite.sendInviteEmail = function(token, inviteEmail){
-  var host = Meteor.absoluteUrl();
-  var body = 'Thanks for your interest in my app!\n\<a href="'+host+'acceptInvite/'+token+'">Click here</a> to claim your invitation and create an account.';
-  var options = {
-      from: "My App <hi@app.io>",
-      to: inviteEmail,
-      subject: 'Welcome to my App Beta!',
-      text: body,
-      // headers: "Content-Type: text/html; charset=ISO-8859-1\r\n"
-  };
-
-  Email.send(options);
-}
 
 // Register a client login handler that either logs in an existing user with the specified invitation token, or creates a new user record with that token.
 
