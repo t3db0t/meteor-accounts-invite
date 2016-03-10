@@ -46,6 +46,7 @@ What's required is a way to allow Oauth (or `accounts-password`) account creatio
 ### Example
 
 ```js
+// server
 AccountsInvite.register({
 	validateToken: validateToken,
 	onCreatedAccount: onCreatedAccount
@@ -59,6 +60,9 @@ function validateToken(token){
 function onCreatedAccount(token){
 	InvitesCollection.update({"token":token}, {$set:{"status":"claimed"}});
 }
+
+// client
+Meteor.loginWithInvite(token);
 ```
 
 ## Known Issues
