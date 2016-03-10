@@ -1,7 +1,7 @@
 Package.describe({
   name: 't3db0t:accounts-invite',
-  version: '0.0.1',
-  summary: 'An invitation system with oauth and anonymous user support',
+  version: '0.0.2',
+  summary: 'Account validation with oauth and anonymous user support',
   git: 'https://github.com/t3db0t/meteor-accounts-invite',
   documentation: 'README.md'
 });
