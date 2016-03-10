@@ -63,12 +63,12 @@ function onSwitchFailureCallback(attemptingUser, attempt){
   }
 }
 
-Accounts.onLoginFailure(function(attempt){
-  console.log("------------------------");
-  console.log("Accounts.onLoginFailure");
-  console.log(attempt);
-  console.log("------------------------");
-});
+// Accounts.onLoginFailure(function(attempt){
+//   console.log("------------------------");
+//   console.log("Accounts.onLoginFailure");
+//   console.log(attempt);
+//   console.log("------------------------");
+// });
 
 // Register a client login handler that either logs in an existing user with the specified invitation token, or creates a new user record with that token.
 

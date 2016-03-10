@@ -1,5 +1,7 @@
 # Accounts-Invite
 
+**Live demo:** [http://accounts-invite-demo.meteor.com/](http://accounts-invite-demo.meteor.com/)
+
 Don't you wish you could validate account creation in Meteor more flexibly? `accounts-invite` is a login validation extension for Meteor that supports OAuth services, not just accounts-password, and provides basic anonymous account functionality.
 
 ## Features
@@ -19,15 +21,45 @@ What's required is a way to allow Oauth (or `accounts-password`) account creatio
 - [`brettle:accounts-patch-ui`](https://github.com/brettle/meteor-accounts-patch-ui/) - Makes `loginButtons` act like there isn't a user logged in when the initial, temporary user is created
 - [`t3db0t:accounts-multiple`](https://github.com/t3db0t/meteor-accounts-multiple) - A fork of [`brettle:accounts-multiple`]() that adds an additional callback to handle the case of disallowed logins (`noAttemptingUser`)
 
+## API
+
+- `Meteor.loginWithInvite(token, [optionsObject])`
+	- `token` can by any string of your choice, i.e. `Random.id(n)`
+	- `optionsObject` could be used if your app needs more than one separate validation system/area
+- `validateToken(token, options)`
+	- return `true` to allow account registration
+	- return `false` to deny
+- `onCreatedAccount(token)` is called when the account is successfully registered
+
 ## How it works
 
 - `accounts-invite` registers a custom login handler
 - `loginWithInvite(token)` is called by host app
 - temporary user is created
 - User signs in with service of her choice (i.e. via `loginButtons`)
-- `accounts-multiple` catches the 'switching' of accounts and checks that the token is provided in the current attempting user's account
+- `accounts-multiple` catches the 'switching' of accounts and calls `validateToken()`. If that returns true,
 - `accounts-add-service` merges the new service into the existing user record
 - `onCreatedAccount` callback is called so you can, for instance, update an invitation status to "claimed"
+- You should still be able to use `Accounts.validateNewUser` as normal.
+- Note: `Accounts.onLoginFailure` will show some 'failures' as part of the normal operation of this system, due to i.e. `brettle:accounts-add-service`. You can safely ignore these.
+
+### Example
+
+```js
+AccountsInvite.register({
+	validateToken: validateToken,
+	onCreatedAccount: onCreatedAccount
+});
+
+function validateToken(token){
+	if(InvitesCollection.findOne({"token":token})) return true;
+	else return false;
+}
+
+function onCreatedAccount(token){
+	InvitesCollection.update({"token":token}, {$set:{"status":"claimed"}});
+}
+```
 
 ## Known Issues
 - I've observed a bug where the user is logged out if they attempt to sign back in too quickly
