@@ -1,6 +1,6 @@
 Package.describe({
   name: 't3db0t:accounts-invite',
-  version: '0.0.2',
+  version: '1.0.0',
   summary: 'Account validation with oauth and anonymous user support',
   git: 'https://github.com/t3db0t/meteor-accounts-invite',
   documentation: 'README.md'
@@ -11,7 +11,7 @@ Package.onUse(function(api) {
   api.export('AccountsInvite');
   
   api.use(['accounts-base'], 'server');
-  api.use(['check', 't3db0t:accounts-multiple', 'brettle:accounts-patch-ui', 'brettle:accounts-add-service']);
+  api.use(['check', 't3db0t:accounts-multiple@0.3.2', 'brettle:accounts-patch-ui@0.1.10', 'brettle:accounts-add-service@1.0.0']);
 
   // Allow us to call Accounts.oauth.serviceNames, if there are any OAuth services.
   // Required in this case or else oauth services don't get called, and AccountsInvite gets called instead--not sure why

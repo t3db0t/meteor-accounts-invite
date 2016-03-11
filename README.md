@@ -23,13 +23,16 @@ What's required is a way to allow Oauth (or `accounts-password`) account creatio
 
 ## API
 
-- `Meteor.loginWithInvite(token, [optionsObject])`
+- `Meteor.loginWithInvite(token, [optionsObject])` (Client)
 	- `token` can by any string of your choice, i.e. `Random.id(n)`
 	- `optionsObject` could be used if your app needs more than one separate validation system/area
-- `validateToken(token, options)`
+- `validateToken(token, options)` (Server)
 	- return `true` to allow account registration
 	- return `false` to deny
-- `onCreatedAccount(token)` is called when the account is successfully registered
+- `onCreatedAccount(token, user)` (Server)
+	- called when the account is successfully registered
+	- `token`: the token used in `loginWithInvite`
+	- `user`: the user record that was created
 
 ## How it works
 
@@ -57,8 +60,10 @@ function validateToken(token){
 	else return false;
 }
 
-function onCreatedAccount(token){
+function onCreatedAccount(token, user){
 	InvitesCollection.update({"token":token}, {$set:{"status":"claimed"}});
+	// Here you could also do something like...
+	// Roles.addUsersToRoles(user._id, ['beta-permissions']);
 }
 
 // client
@@ -67,3 +72,6 @@ Meteor.loginWithInvite(token);
 
 ## Known Issues
 - I've observed a bug where the user is logged out if they attempt to sign back in too quickly
+
+## Acknowledgements
+I'm indebted to [`brettle`](https://github.com/brettle) for his [help in figuring out](https://github.com/brettle/meteor-accounts-deluxe/issues/4) how to make this work.
