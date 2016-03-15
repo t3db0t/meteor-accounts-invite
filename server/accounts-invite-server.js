@@ -1,6 +1,3 @@
-// onCreatedAccount, onInvalidToken, loginCallback?
-// 
-
 AccountsInvite.register = function(cbs){
   check(cbs, Object);
 
@@ -42,8 +39,11 @@ function noAttemptingUserCallback(attempt){
 function validateSwitchCallback(attemptingUser, attempt) {
   // console.log("validateSwitchCallback");
   // console.log(attemptingUser);
-  if (attemptingUser.services.accountsInvite.token) {
-    return AccountsInvite.validateToken(attemptingUser.services.accountsInvite.token, AccountsInvite.validationOptions);
+
+  // check for existence of accountsInvite record
+  if (attemptingUser.services.accountsInvite) {
+    // return entire accountsInvite object
+    return AccountsInvite.validateToken(attemptingUser.services.accountsInvite);
   } else {
     throw new Meteor.Error("not-invited", "This login attempt somehow wasn't using accounts-invite");
   }
@@ -53,14 +53,15 @@ function validateSwitchCallback(attemptingUser, attempt) {
 /* called when a logged in user fails when logging in using a different service,
 /* and it provides the attempting user. */
 function onSwitchFailureCallback(attemptingUser, attempt){
-  // console.log("onSwitchFailureCallback");
-  // console.log(attempt);
+  console.log("onSwitchFailureCallback");
+  console.log(attempt);
   // WARNING: Super hacky / brittle. This needs to check that the error is specifically produced
   // by brettle:accounts-add-service, and I'm currently not aware of a better way to do this.
   // If accounts-add-service changes this error message, this will break!
   if(attemptingUser.services.accountsInvite && attempt.error.reason.includes("New login not needed")){
     // The attempt is using Accounts-Invite, let them in.
-    AccountsInvite.onCreatedAccount(attemptingUser.services.accountsInvite.token, attemptingUser);
+    // Send the whole Invite object
+    AccountsInvite.onCreatedAccount(attemptingUser.services.accountsInvite, attemptingUser);
   } else {
     console.log("accounts-add-service failed");
   }
@@ -75,22 +76,23 @@ function onSwitchFailureCallback(attemptingUser, attempt){
 
 // Register a client login handler that either logs in an existing user with the specified invitation token, or creates a new user record with that token.
 
-Accounts.registerLoginHandler("accounts-invite", function(options) {
-  // console.log("accounts-invite loginHandler");
-  if (!options || !options.inviteToken || Meteor.userId()) {
+Accounts.registerLoginHandler("accounts-invite", function(loginRequest) {
+  console.log("accounts-invite loginHandler");
+  console.log(loginRequest);
+
+  if (!loginRequest || !loginRequest.options.inviteToken || Meteor.userId()) {
     return new Meteor.Error("invalid-invitation-login", "No options, no token, or already logged in");
   }
 
   var userId;
-  var existingUser = Meteor.users.findOne({ 'services.accountsInvite.token': options.inviteToken});
+  // TODO: Check this better
+  var existingUser = Meteor.users.findOne({ 'services.accountsInvite': loginRequest.options});
   if (existingUser) {
     userId = existingUser._id;
   } else {
-    userId = Accounts.insertUserDoc(options, {
+    userId = Accounts.insertUserDoc(loginRequest, {
       services: {
-        'accountsInvite': {
-          token: options.inviteToken
-        }
+        'accountsInvite': loginRequest.options
       }
     });
   };
