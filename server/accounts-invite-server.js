@@ -30,7 +30,7 @@ function noAttemptingUserCallback(attempt){
     // console.log("No accountsInvite; canceling login");
     Meteor.users.remove({"_id":attempt.user._id});
     // return false;
-    throw new Meteor.Error("not-invited-public", "Sorry, Beta invitations only for now!")
+    throw new Meteor.Error("not-invited-public", "Sorry, Beta invitations only for now!");
   } else return true;
 }
 
@@ -53,8 +53,9 @@ function validateSwitchCallback(attemptingUser, attempt) {
 /* called when a logged in user fails when logging in using a different service,
 /* and it provides the attempting user. */
 function onSwitchFailureCallback(attemptingUser, attempt){
-  console.log("onSwitchFailureCallback");
-  console.log(attempt);
+  // console.log("onSwitchFailureCallback");
+  // console.log(attempt);
+  
   // WARNING: Super hacky / brittle. This needs to check that the error is specifically produced
   // by brettle:accounts-add-service, and I'm currently not aware of a better way to do this.
   // If accounts-add-service changes this error message, this will break!
@@ -67,18 +68,11 @@ function onSwitchFailureCallback(attemptingUser, attempt){
   }
 }
 
-// Accounts.onLoginFailure(function(attempt){
-//   console.log("------------------------");
-//   console.log("Accounts.onLoginFailure");
-//   console.log(attempt);
-//   console.log("------------------------");
-// });
-
 // Register a client login handler that either logs in an existing user with the specified invitation token, or creates a new user record with that token.
 
 Accounts.registerLoginHandler("accounts-invite", function(loginRequest) {
-  console.log("accounts-invite loginHandler");
-  console.log(loginRequest);
+  // console.log("accounts-invite loginHandler");
+  // console.log(loginRequest);
 
   if (!loginRequest || !loginRequest.options.inviteToken || Meteor.userId()) {
     return new Meteor.Error("invalid-invitation-login", "No options, no token, or already logged in");

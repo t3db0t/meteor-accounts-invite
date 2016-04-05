@@ -23,15 +23,15 @@ What's required is a way to allow Oauth (or `accounts-password`) account creatio
 
 ## API
 
-- `Meteor.loginWithInvite(token, [optionsObject])` (Client)
-	- `token` can by any string of your choice, i.e. `Random.id(n)`
-	- `optionsObject` could be used if your app needs more than one separate validation system/area
-- `validateToken(token, options)` (Server)
+- `Meteor.loginWithInvite(inviteObject)` (Client)
+    - `inviteObject` is an object containing at least a field called `inviteToken`
+	- `inviteToken` can by any string of your choice, i.e. `Random.id(n)`
+	- The object can be used for any custom fields, for instance if your app needs more than one separate validation system/area
+- `validateToken(inviteObject)` (Server)
 	- return `true` to allow account registration
 	- return `false` to deny
-- `onCreatedAccount(token, user)` (Server)
-	- called when the account is successfully registered
-	- `token`: the token used in `loginWithInvite`
+- `onCreatedAccount(inviteObject, user)` (Server)
+	- Called when the account is successfully registered
 	- `user`: the user record that was created
 
 ## How it works
