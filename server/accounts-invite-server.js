@@ -53,8 +53,9 @@ function validateSwitchCallback(attemptingUser, attempt) {
 /* called when a logged in user fails when logging in using a different service,
 /* and it provides the attempting user. */
 function onSwitchFailureCallback(attemptingUser, attempt){
-  // console.log("onSwitchFailureCallback");
-  // console.log(attempt);
+  console.log("onSwitchFailureCallback");
+  console.log(attempt);
+  console.log("--------------");
   
   // WARNING: Super hacky / brittle. This needs to check that the error is specifically produced
   // by brettle:accounts-add-service, and I'm currently not aware of a better way to do this.
@@ -62,7 +63,7 @@ function onSwitchFailureCallback(attemptingUser, attempt){
   if(attemptingUser.services.accountsInvite && attempt.error.reason.includes("New login not needed")){
     // The attempt is using Accounts-Invite, let them in.
     // Send the whole Invite object
-    AccountsInvite.onCreatedAccount(attemptingUser.services.accountsInvite, attemptingUser);
+    AccountsInvite.onCreatedAccount(attemptingUser, attempt);
   } else {
     console.log("accounts-add-service failed");
   }

@@ -30,9 +30,9 @@ What's required is a way to allow Oauth (or `accounts-password`) account creatio
 - `validateToken(inviteObject)` (Server)
 	- return `true` to allow account registration
 	- return `false` to deny
-- `onCreatedAccount(inviteObject, user)` (Server)
+- `onCreatedAccount(attemptingUser, attempt)` (Server)
 	- Called when the account is successfully registered
-	- `user`: the user record that was created
+	- `attemptingUser`, `attempt`: same as in `brettle:accounts-multiple`, useful for assigning profile name or other info
 
 ## How it works
 
