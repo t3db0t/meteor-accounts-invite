@@ -11,7 +11,8 @@ Package.onUse(function(api) {
   api.export('AccountsInvite');
   
   api.use(['accounts-base'], 'server');
-  api.use(['check', 't3db0t:accounts-multiple@0.3.2', 'brettle:accounts-patch-ui@0.1.10', 'brettle:accounts-add-service@1.0.0']);
+  api.use(['check', 't3db0t:accounts-multiple@0.3.2', 'brettle:accounts-patch-ui@0.1.12', 'brettle:accounts-add-service@1.0.0']);
+  // brettle:accounts-patch-ui
 
   // Allow us to call Accounts.oauth.serviceNames, if there are any OAuth services.
   // Required in this case or else oauth services don't get called, and AccountsInvite gets called instead--not sure why
