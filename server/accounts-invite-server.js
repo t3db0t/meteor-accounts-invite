@@ -49,13 +49,14 @@ function validateSwitchCallback(attemptingUser, attempt) {
   }
 }
 
+// Captures the expected 'failure' to switch to a new account
 /* Works just like Accounts.onLoginFailure() callback except it's strictly
 /* called when a logged in user fails when logging in using a different service,
 /* and it provides the attempting user. */
 function onSwitchFailureCallback(attemptingUser, attempt){
-  console.log("onSwitchFailureCallback");
-  console.log(attempt);
-  console.log("--------------");
+  // console.log("onSwitchFailureCallback");
+  // console.log(attempt);
+  // console.log("--------------");
   
   // WARNING: Super hacky / brittle. This needs to check that the error is specifically produced
   // by brettle:accounts-add-service, and I'm currently not aware of a better way to do this.
