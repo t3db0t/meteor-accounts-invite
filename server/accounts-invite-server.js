@@ -7,6 +7,11 @@ AccountsInvite.register = function(cbs){
   if(cbs.onCreatedAccount){
     AccountsInvite.onCreatedAccount = cbs.onCreatedAccount;
   }
+  if(cbs.onSwitch){
+    AccountsInvite.onSwitch = cbs.onSwitch;
+    console.log('setting onSwitch');
+    console.log(AccountsInvite.onSwitch);
+  }
   if(cbs.validationOptions){
     AccountsInvite.validationOptions = cbs.validationOptions;
   } else {
@@ -17,9 +22,13 @@ AccountsInvite.register = function(cbs){
 AccountsMultiple.register({
   onNoAttemptingUser: noAttemptingUserCallback,
   validateSwitch: validateSwitchCallback,
-  // onSwitch: onSwitchCallback,
+  onSwitch: onSwitch,
   onSwitchFailure: onSwitchFailureCallback
 });
+
+function onSwitch(attemptingUser, attempt){
+  AccountsInvite.onSwitch(attemptingUser, attempt);
+}
 
 // Works like validateLoginAttempt but only called from t3db0t:accounts-multiple
 function noAttemptingUserCallback(attempt){
@@ -35,10 +44,27 @@ function noAttemptingUserCallback(attempt){
 }
 
 /* Works just like Accounts.validateLoginAttempt() except that the attempting
-/* user is available. */
+   user is available.
+   attemptingUser = OLD/initial account (i.e. guest/anonymous)
+     - has user schema
+   attempt = NEW/'real' account (i.e. facebook login)
+     {
+       type: 'facebook',
+       user: { ... },
+       ...
+     }
+*/
 function validateSwitchCallback(attemptingUser, attempt) {
   // console.log("validateSwitchCallback");
   // console.log(attemptingUser);
+  // console.log("---");
+  // console.log(attempt);
+  // console.log("----------------");
+
+  if(AccountsInvite.onValidateSwitch){
+    // provides a user callback for any other account-switching stuff you need to do
+    AccountsInvite.onValidateSwitch(attemptingUser, attempt);
+  }
 
   // check for existence of accountsInvite record
   if (attemptingUser.services.accountsInvite) {
