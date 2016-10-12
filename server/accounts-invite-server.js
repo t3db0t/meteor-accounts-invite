@@ -1,6 +1,9 @@
 AccountsInvite.register = function(cbs){
   check(cbs, Object);
 
+  if(cbs.invitesEnabled){
+    AccountsInvite.invitesEnabled = cbs.invitesEnabled;
+  }
   if(cbs.validateToken){
     AccountsInvite.validateToken = cbs.validateToken;
   }
@@ -9,8 +12,6 @@ AccountsInvite.register = function(cbs){
   }
   if(cbs.onSwitch){
     AccountsInvite.onSwitch = cbs.onSwitch;
-    console.log('setting onSwitch');
-    console.log(AccountsInvite.onSwitch);
   }
   if(cbs.validationOptions){
     AccountsInvite.validationOptions = cbs.validationOptions;
@@ -34,7 +35,7 @@ function onSwitch(attemptingUser, attempt){
 function noAttemptingUserCallback(attempt){
   // console.log("noAttemptingUserCallback");
   // console.log(attempt);
-  if(! attempt.user.services.accountsInvite){
+  if(! attempt.user.services.accountsInvite && AccountsInvite.invitesEnabled){
     // delete the user record that was created in the attempt
     // console.log("No accountsInvite; canceling login");
     Meteor.users.remove({"_id":attempt.user._id});
